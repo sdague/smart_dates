@@ -1,0 +1,6 @@
+name = Date Autoset
+description = Enables jquery setting of to dates/times based on changes in from dates/times
+dependencies[] = date_api
+dependencies[] = date_timezone
+package = Date/Time
+core = 6.x
