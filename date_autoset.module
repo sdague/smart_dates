@@ -26,7 +26,6 @@ function date_autoset_process($element, $edit, $form_state, $form) {
     $time1 = '#' . $element["time"]["#id"];
     $time2 = str_replace("value", "value2", $time1);
 
-    kpr($element);
     drupal_add_js("Drupal.behaviors.date_autoset = function() {
         DateAutoset.register_dates($('" . $date1 . "'), $('" . $date2 . "'));
         DateAutoset.register_times($('" . $time1 . "'), $('" . $time2 . "'));
