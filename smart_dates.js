@@ -1,8 +1,8 @@
-var DateAutoset = DateAutoset || {};
+var SmartDates = SmartDates || {};
 
-DateAutoset.saved_time = "12:00PM";
+SmartDates.saved_time = "12:00PM";
 
-DateAutoset.time_delta = function(time, delta) {
+SmartDates.time_delta = function(time, delta) {
     var timesplit = time.split(":");
     var min = timesplit[1];
     var hour = parseInt(timesplit[0]);
@@ -20,7 +20,7 @@ DateAutoset.time_delta = function(time, delta) {
     return hour + ":" + min;
 };
 
-DateAutoset.register_dates = function(date1, date2) {
+SmartDates.register_dates = function(date1, date2) {
     date1.blur(function() {
         date2.val(date1.val());
     });
@@ -29,7 +29,7 @@ DateAutoset.register_dates = function(date1, date2) {
     });
 };
 
-DateAutoset.register_times = function(time1, time2) {
+SmartDates.register_times = function(time1, time2) {
     var saved_time = "12:00PM";
     time1.focus(function() {
         saved_time = time1.val();
@@ -37,7 +37,7 @@ DateAutoset.register_times = function(time1, time2) {
 
     time1.blur(function() {
         if (time2.val() == saved_time) {
-            time2.val(DateAutoset.time_delta(time1.val(), 2));
+            time2.val(SmartDates.time_delta(time1.val(), 2));
         }
     });
 }
