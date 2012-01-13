@@ -1,25 +1,5 @@
 var SmartDates = SmartDates || {};
 
-SmartDates.saved_time = "12:00PM";
-
-SmartDates.time_delta = function(time, delta) {
-    var timesplit = time.split(":");
-    var min = timesplit[1];
-    var hour = parseInt(timesplit[0]);
-    hour = hour + delta;
-    if (hour >= 12) {
-        if (min.match(/AM/) == "AM") {
-            min = min.replace("AM", "PM");
-        } else if (min.match(/PM/)) {
-            min = min.replace("PM", "AM");
-        }
-    }
-    if (hour > 12) {
-        hour = hour - 12;
-    }
-    return hour + ":" + min;
-};
-
 SmartDates.register_dates = function(date1, date2) {
     date1.blur(function() {
         date2.val(date1.val());
@@ -30,14 +10,25 @@ SmartDates.register_dates = function(date1, date2) {
 };
 
 SmartDates.register_times = function(time1, time2) {
-    var saved_time = "12:00PM";
+    var time1start = Date.parse(time1.val());
     time1.focus(function() {
-        saved_time = time1.val();
+        time1start = Date.parse(time1.val());
     });
 
-    time1.blur(function() {
-        if (time2.val() == saved_time) {
-            time2.val(SmartDates.time_delta(time1.val(), 2));
+    time1.change(function() {
+        var time2now = Date.parse(time2.val());
+        var time1now = Date.parse(time1.val());
+
+        // if we started at the same point
+        if (time2now.valueOf() == time1start.valueOf()) {
+            time2.val(time1now.clone().addHours(2).toString("hh:mmtt"));
+            time1start = Date.parse(time1.val());
+        }
+        else {
+            var interval = time2now.valueOf() - time1start.valueOf();
+            // alert("Time1start: " + time1start + "\nTime2now: " + time2now +  "\nTime1now: " + time1now + "\nInterval: " + interval);
+            time2.val(time1now.clone().addMilliseconds(interval).toString("hh:mmtt"));
+            time1start = Date.parse(time1.val());
         }
     });
 }

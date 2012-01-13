@@ -19,6 +19,7 @@ function smart_dates_elements() {
 
 function smart_dates_process($element, $edit, $form_state, $form) {
   if ($element["#title"] == "From date") {
+    drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/date-en-US.js");
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/smart_dates.js");
 
     $date1 = '#' . $element["date"]["#id"];
@@ -27,8 +28,8 @@ function smart_dates_process($element, $edit, $form_state, $form) {
     $time2 = str_replace("value", "value2", $time1);
 
     drupal_add_js("Drupal.behaviors.smart_dates = function() {
-        DateAutoset.register_dates($('" . $date1 . "'), $('" . $date2 . "'));
-        DateAutoset.register_times($('" . $time1 . "'), $('" . $time2 . "'));
+        SmartDates.register_dates($('" . $date1 . "'), $('" . $date2 . "'));
+        SmartDates.register_times($('" . $time1 . "'), $('" . $time2 . "'));
      };", "inline");
   }
   return $element;
