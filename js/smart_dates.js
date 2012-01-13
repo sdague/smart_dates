@@ -1,19 +1,21 @@
 var SmartDates = SmartDates || {};
 
 SmartDates.register_dates = function(date1, date2) {
-    date1.blur(function() {
-        date2.val(date1.val());
-    });
+    var date1start = Date.parse(date1.val());
+
     date1.change(function() {
-        date2.val(date1.val());
+        var date2now = Date.parse(date2.val());
+        var date1now = Date.parse(date1.val());
+
+        var interval = date2now.valueOf() - date1start.valueOf();
+        // alert("Date1start: " + date1start + "\nDate2now: " + date2now +  "\nDate1now: " + date1now + "\nInterval: " + interval);
+        date2.val(date1now.clone().addMilliseconds(interval).toString("MM/dd/yyyy"));
+        date1start = Date.parse(date1.val());
     });
 };
 
 SmartDates.register_times = function(time1, time2) {
     var time1start = Date.parse(time1.val());
-    time1.focus(function() {
-        time1start = Date.parse(time1.val());
-    });
 
     time1.change(function() {
         var time2now = Date.parse(time2.val());
