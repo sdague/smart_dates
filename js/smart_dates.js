@@ -1,5 +1,6 @@
 var SmartDates = SmartDates || {};
 
+
 SmartDates.register_dates = function(date1, date2, format) {
     var date1start = Date.parseExact(date1.val(), format);
 
@@ -20,6 +21,8 @@ SmartDates.register_times = function(time1, time2, format) {
     time1.change(function() {
         var time1now = Date.parseExact(time1.val(), format);
         var time2now = Date.parseExact(time2.val(), format);
+
+        // alert("Time1start: " + time1start + "\nTime2now: " + time2now +  "\nTime1now: " + time1now + "\nInterval: " + interval);
 
         if (time2now) {
             // if we started at the same point
