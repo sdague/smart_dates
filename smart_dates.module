@@ -17,8 +17,43 @@ function smart_dates_elements() {
   );
 }
 
+function smart_dates_convert_format($format) {
+  preg_match("/^(.*?)[ -]+([\w\:]+)$/", $format, $matches);
+  kpr($matches);
+
+  $date = $matches[1];
+  $time = $matches[2];
+  /**
+   * These have to be done in the right order so that we don't replace things
+   * we've already replaced
+   */
+  $date = str_replace("y", "yy", $date);
+  $date = str_replace("Y", "yyyy", $date);
+
+  $date = str_replace("d", "dd", $date);
+  $date = str_replace("j", "d", $date);
+
+  $date = str_replace("M", "MMM", $date); // month abrev
+  $date = str_replace("F", "MMMM", $date); // full month
+  $date = str_replace("m", "MM", $date); // leading zero
+  $date = str_replace("n", "M", $date); // no leading zero
+
+  $time = str_replace("H", "HH", $time); // leading zeros - 24
+  $time = str_replace("G", "H", $time); // no leading zeros - 24
+  $time = str_replace("h", "hh", $time); // leading zeros - 12
+  $time = str_replace("g", "h", $time); // leading zeros - 12
+  $time = str_replace("i", "mm", $time); // minutes
+  $time = str_replace("s", "ss", $time); // seconds
+  $time = str_replace("a", "tt", $time); // am/pm
+  $time = str_replace("A", "tt", $time); // AM/PM
+
+  return array("date" => $date, "time" => $time);
+}
+
 function smart_dates_process($element, $edit, $form_state, $form) {
-  if ($element["#title"] == "From date") {
+  if ($element["#title"] == t("From date")) {
+    kpr($element);
+    $format = smart_dates_convert_format($element["#date_format"]);
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/date-en-US.js");
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/smart_dates.js");
 
@@ -28,8 +63,8 @@ function smart_dates_process($element, $edit, $form_state, $form) {
     $time2 = str_replace("value", "value2", $time1);
 
     drupal_add_js("Drupal.behaviors.smart_dates = function() {
-        SmartDates.register_dates($('" . $date1 . "'), $('" . $date2 . "'));
-        SmartDates.register_times($('" . $time1 . "'), $('" . $time2 . "'));
+        SmartDates.register_dates($('" . $date1 . "'), $('" . $date2 . "'), '" . $format["date"] . "');
+        SmartDates.register_times($('" . $time1 . "'), $('" . $time2 . "'), '" . $format["time"] . "');
      };", "inline");
   }
   return $element;
