@@ -19,7 +19,6 @@ function smart_dates_elements() {
 
 function smart_dates_convert_format($format) {
   preg_match("/^(.*?)[ -]+([\w\:]+)$/", $format, $matches);
-  kpr($matches);
 
   $date = $matches[1];
   $time = $matches[2];
@@ -52,7 +51,7 @@ function smart_dates_convert_format($format) {
 
 function smart_dates_process($element, $edit, $form_state, $form) {
   if ($element["#title"] == t("From date")) {
-    kpr($element);
+
     $format = smart_dates_convert_format($element["#date_format"]);
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/date-en-US.js");
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/smart_dates.js");
