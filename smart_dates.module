@@ -38,9 +38,9 @@ function smart_dates_convert_format($format) {
   $date = str_replace("n", "M", $date); // no leading zero
 
   $time = str_replace("H", "HH", $time); // leading zeros - 24
-  $time = str_replace("G", "H", $time); // no leading zeros - 24
+  $time = str_replace("G", "HH", $time); // no leading zeros - 24
   $time = str_replace("h", "hh", $time); // leading zeros - 12
-  $time = str_replace("g", "h", $time); // leading zeros - 12
+  $time = str_replace("g", "hh", $time); // leading zeros - 12
   $time = str_replace("i", "mm", $time); // minutes
   $time = str_replace("s", "ss", $time); // seconds
   $time = str_replace("a", "tt", $time); // am/pm
