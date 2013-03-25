@@ -1,20 +1,12 @@
 <?php
+
 /**
- * Implementation of hook_elements().
+ * Implements hook_element_info_alter().
  */
-function smart_dates_elements() {
-  return array(
-    'date_popup' => array(
-      '#input' => TRUE,
-      '#tree' => TRUE,
-      '#process' => array('smart_dates_process')
-    ),
-    'date' => array(
-      '#input' => TRUE,
-      '#tree' => TRUE,
-      '#process' => array('smart_dates_process')
-    )
-  );
+function smart_dates_element_info_alter(&$type) {
+  if (isset($type['date_combo'])) {
+    $type['date_combo']['#pre_render'][] = 'smart_dates_make_smart';
+  }
 }
 
 function smart_dates_convert_format($format) {
@@ -49,26 +41,25 @@ function smart_dates_convert_format($format) {
   return array("date" => $date, "time" => $time);
 }
 
-function smart_dates_process($element, $edit, $form_state, $form) {
-  if ($element["#title"] == t("From date")) {
-
-    $format = smart_dates_convert_format($element["#date_format"]);
+function smart_dates_make_smart($element) {
+  if ($element['#id']) {
+    $format = smart_dates_convert_format($element['value']["#date_format"]);
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/date-en-US.js");
     drupal_add_js(drupal_get_path('module', 'smart_dates') . "/js/smart_dates.js");
 
-    $date1 = '#' . $element["date"]["#id"];
-    $date2 = str_replace("value", "value2", $date1);
-    $time1 = '#' . $element["time"]["#id"];
-    $time2 = str_replace("value", "value2", $time1);
+    $date1 = '#' . $element['value']['date']['#id'];
+    $date2 = '#' . $element['value2']['date']['#id'];
+    $time1 = '#' . $element['value']['time']['#id'];
+    $time2 = '#' . $element['value2']['time']['#id'];
 
-    drupal_add_js("Drupal.behaviors.smart_dates = function() {
+    drupal_add_js("
+(function ($) {
+  Drupal.behaviors.smart_dates = {
+      attach: function(context, settings) {
         SmartDates.register_dates($('" . $date1 . "'), $('" . $date2 . "'), '" . $format["date"] . "');
         SmartDates.register_times($('" . $time1 . "'), $('" . $time2 . "'), '" . $format["time"] . "');
-     };", "inline");
+}}})(jQuery);
+   ", array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
   }
   return $element;
-}
-
-function theme_smart_dates($element) {
-  return $element['#children'];
 }
